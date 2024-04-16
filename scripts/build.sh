@@ -3,8 +3,7 @@ set -e
 trap "echo script failed; bash -i" ERR
 ALPINE_VERSION=${ALPINE_VERSION}
 APP_DIR=/app
-WORKDIR=$APP_DIR/workdir
-mkdir -p $WORKDIR
+WORKDIR=/workdir
 
 
 # Install dependencies
