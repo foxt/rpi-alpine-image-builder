@@ -45,6 +45,6 @@ sh $WORKDIR/aports/scripts/mkimage.sh \
     --tag $ALPINE_VERSION-rpicustom \
     --outdir $WORKDIR/output \
     --profile rpicustom \
-    --arch aarch64 \
+    --arch $BUILD_ARCH \
     --hostkeys \
     --repository http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main
