@@ -26,15 +26,21 @@ Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot
 
 | Model              | via SD Card | via Netboot | via rpiboot | Notes       |
 |--------------------|-------------|-------------|-------------|-------------|
-| Pi 1B,             | unsupported | N/A         | N/A         | `armhf` not currently supported (but should be easy to add) |
-| Pi 1A, CM1, Zero   | unsupported | N/A         |             | `armhf` not currently supported (but should be easy to add) |
-| Pi 2B (1.1)        | unsupported | N/A         | N/A         | `armv7` not currently supported (but should be easy to add) |
-| Pi 2B (1.2)        | unsupported |             | N/A         | `armv7` not currently supported (but should be easy to add) |
-| Pi 3B, 3B+         | untested    | untested    | N/A         | Should work. Haven't tried it yet. |
-| CM3                | untested    | untested    | untested    | Should work. Haven't tried it yet. |
-| Pi 3A, Zero 2,     | untested    | N/A         | unsupported | Should work. Haven't tried it yet. |
-| Pi 4               | untested    | works       | works       | |
-| Pi 400, CM4, Pi 5  | untested    | untested    | untested    | Should work. Haven't tried it yet. |
+| Pi 4               | ✅          | ✅          | ✅          | |
+| Zero 2             | ✅          | 🚫          | 👎          | |
+| CM3, CM4, Pi 5     | ❔          | ❔          | ❔          | Should work. I don't have the hardware |
+| Pi 3B, 3B+         | ❔          | ❔          | 🚫          | Should work. Haven't tried it yet. |
+| Pi 3A              | ❔          | 🚫          | 👎          | Should work. I don't have the hardware |
+| Pi 2B (1.1)        | 👎          | 🚫          | 🚫          | `armv7` not currently supported (but should be easy to add) |
+| Pi 2B (1.2)        | 👎          |             | 🚫          | `armv7` not currently supported (but should be easy to add) |
+| Pi 1B,             | 👎          | 🚫          | 🚫          | `armhf` not currently supported (but should be easy to add) |
+| Pi 1A, CM1, Zero   | 👎          | 🚫          |             | `armhf` not currently supported (but should be easy to add) |
+
+### Key
+ - `👎` - Not supported
+ - `🚫` - Impossible (lacks hardware support)
+ - `❔` - Untested
+ - `✅` - Works
 
 
 # Troubleshooting
@@ -45,10 +51,10 @@ Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot
 This means the Pi could not load the kernel. Make sure the kernel is in the right place, and that the Pi can access the files. This may also occur when using rpiboot with a raw folder. Package the folder into a FAT32 `boot.img` instead.
 
 ### `/dev/root cannot open block device`,  `Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)`
-This means the Pi could not load the `boot/initramfs-pi` file. Check that the file is in the right place, and that the Pi can access the files. This can happen if your SFTP permissions are incorrect.
+This means the Pi could not load the `boot/initramfs-pi` file. The common reason is due to the SFTP server lacking permissions to read the file.
 
-### `Couldn't mount boot media` and going into a recovery shell when using net/rpiboot
-This means your `cmdline.txt` is not configured to loaad the rest of the system from HTTP. Check `netboot.sh` for the correct `cmdline.txt` configuration.
+### `Mounting boot media failed`
+This means the Pi could not mount the boot media - for network booting this means that no network connection is possible. Ensure `cmdline.txt` is configured with the correct IP configuration & links to download the rest of the system image. Check `netboot.sh` for the correct `cmdline.txt` configuration.
 
 ### `/sbin/init not found in new root`
 Your Pi couldn't download the APKs, or the signature is incorrect. Check your HTTP server logs, and make sure the APKs are signed using the correct key.
