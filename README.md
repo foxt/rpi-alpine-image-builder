@@ -1,9 +1,7 @@
 # Raspberry Pi Alpine Image Builder
 
 This is a rudimentary script to build a custom Alpine Linux image for the Raspberry Pi. The goals of this project are:
-  - Build a custom ramdisk based OSimage for the Raspberry Pi 3/4/Zero2.
-    - It would be a nice to have to support the Pi1/2/Zero. Shouldn't be too hard to implement as there's nothing in these scripts that has a hard dependency on the architecture, but I'm focused on ARM64 for now.
-    - And, I don't have a Pi 5 to test. Should™ work the same way as a Pi 4
+  - Build a custom ramdisk based OSimage for the Raspberry Pi 
   - Entirely built on a workstation - i.e. not: put a fresh SD card in the Pi to modify an existing image
   - Built in a 'clean-room' fashion - booting an Alpine image and immediately running `lbu commit` shows that changes are made to the system during the boot process, and can be based on unique configuration (for example, /etc/resolv.conf is filled in with the DNS server & hostname from DHCP).
   - Netboot and or rpiboot for ease of development.
@@ -16,30 +14,48 @@ Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot
 
     - Neither netboot or rpiboot can only deliver the Linux kernel and initramfs, for the APKs, modloop & apkovl, these must be delivered via HTTP or FTP.
       - This also means that both netboot and rpiboot require the Raspberry Pi to be connected via an Ethernet connection, thus, meaning this cannot be performed on the Zero or the Pi 3A.
-      - It may be possible to include `wpa_supplicant` into the initramfs to allow rpiboot on boards lacking Ethernet, however this is currently out of scope.
+      - It may be possible to include `wpa_supplicant` into the initramfs to allow rpiboot to work on the Zero over Wifi, USB ethernet for the 1A/3A and CM1/3/3+/4S. More investigation is needed.
     - Netboot requires a SFTP server to deliver the files.
     - On Pi 4 and 5, the SFTP server IP address can be [configured in the EEPROM](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#TFTP_IP). On the Pi3, this must be handed out by the DHCP server.
-    - rpiboot is extremely unreliable when booting from a raw folder, thus, you should package the folder into a FAT32 `boot.img`, and use a `config.txt` with `boot_ramdisk=1`.
     - A script is provided for macOS users to allow network booting using the built in tftp server.
+    - A script is also included for macOS users to use rpiboot. This must be installed separately. TODO: convert the `boot.img` generation script to a Linux script for use in the Docker container.
 
-## Tested Configurations
+## Configurations
 
-| Model              | via SD Card | via Netboot | via rpiboot | Notes       |
-|--------------------|-------------|-------------|-------------|-------------|
-| Pi 4               | ✅          | ✅          | ✅          | |
-| Zero 2             | ✅          | 🚫          | 👎          | |
-| CM3, CM4, Pi 5     | ❔          | ❔          | ❔          | Should work. I don't have the hardware |
-| Pi 3B, 3B+         | ❔          | ❔          | 🚫          | Should work. Haven't tried it yet. |
-| Pi 3A              | ❔          | 🚫          | 👎          | Should work. I don't have the hardware |
-| Pi 2B (1.1)        | 👎          | 🚫          | 🚫          | `armv7` not currently supported (but should be easy to add) |
-| Pi 2B (1.2)        | 👎          |             | 🚫          | `armv7` not currently supported (but should be easy to add) |
-| Pi 1B,             | 👎          | 🚫          | 🚫          | `armhf` not currently supported (but should be easy to add) |
-| Pi 1A, CM1, Zero   | 👎          | 🚫          |             | `armhf` not currently supported (but should be easy to add) |
+
+### Image architecture
+| Model                  | aarch64 | armv7 | armhf | Notes |
+|------------------------|---------|-------|-------|-------|
+| Pi 5                   |   ❔    |   👎  |   👎  | |
+| Pi 4/CM4/CM4S/400      |   ✅    |   🔥  |   🔥  | Tested on a Pi 4 (v1.2) 4GB. |
+| Pi 3/3+/CM3/CM3+/Zero2 |   ✅    |   ✅  |   🔥  | Tested on a Pi 3B 1.2 and a Pi Zero 2W |
+| Pi 2B                  |   👎    |   ❔  |   ❔  | |
+| Pi 1A/1B/CM1/Zero      |   🔥    |   🔥  |   ✅  | Tested on a Pi Zero W |
+
+### Boot methods
+The SD card can deliver the kernel, initramfs, APKs, modloop and apkovl. Netboot and rpiboot can only deliver the kernel and initramfs. The rest must be delivered via HTTP or FTP.
+
+When using rpiboot, with a Pi 4, its better to build the boot folder into a boot.img, however this doesn't seem to work on previous models.
+
+| Model        | SD Card | Bootloader via Netboot | Bootloader via rpiboot | Rest via HTTP/FTP | Notes |
+|--------------|---------|------------------------|------------------------|-------------------|-------|
+| Pi 5         |   ❔    |   ❔                   |   ❔                   |   ❔              | |
+| Pi 4/CM4/400 |   ✅    |   ✅                   |   ✅                   |   ✅              | Tested on a Pi 4 (v1.2) 4GB. Tested with onboard ethernet and a USB ethernet adapter. Can be configured either by DHCP or EEPROM option |
+| Pi CM4S      |   ❔    |   ❔                   |   ❔                   |   👎              | |
+| Pi 3B, 3B+   |   ✅    |   ✅                   |   🚫                   |   ✅              | Tested on a Pi 3B (v1.2).|
+| Pi 3A        |   ✅    |   🚫                   |   ❔                   |   👎              | |
+| Pi Zero 2    |   ✅    |   🚫                   |   ✅                   |   🔥              | USB ethernet not working. |
+| Pi 2B        |   ❔    |   ❔                   |   ❔                   |   ❔              | |
+| Pi Zero      |   ✅    |   🚫                   |   ❔                   |   👎              | |
+| Pi 1B        |   ✅    |   🚫                   |   🚫                   |   ❔              | |
+| Pi 1A, CM1   |   ✅    |   🚫                   |   ❔                   |   👎              | |
+
 
 ### Key
- - `👎` - Not supported
- - `🚫` - Impossible (lacks hardware support)
- - `❔` - Untested
+ - `🚫` - Impossible - lacks hardware support.
+ - `🔥` - Tested, does not work.
+ - `👎` - Untested - likely not working.
+ - `❔` - Untested - possibly working.
  - `✅` - Works
 
 
@@ -48,7 +64,7 @@ Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot
 ## Booting
 
 ### Rainbow or black screen
-This means the Pi could not load the kernel. Make sure the kernel is in the right place, and that the Pi can access the files. This may also occur when using rpiboot with a raw folder. Package the folder into a FAT32 `boot.img` instead.
+This means the Pi could not load the kernel. Ensure you're using the right architecture for the Pi model you're running. This may also occur when using rpiboot with a raw folder. Package the folder into a FAT32 `boot.img` instead.
 
 ### `/dev/root cannot open block device`,  `Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)`
 This means the Pi could not load the `boot/initramfs-pi` file. The common reason is due to the SFTP server lacking permissions to read the file.
