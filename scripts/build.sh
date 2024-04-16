@@ -40,6 +40,7 @@ mkdir -p /root/.abuild
 echo "PACKAGER_PRIVKEY=\"$APP_DIR/keys/build.rsa\"" >> /root/.abuild/abuild.conf
 
 rm -rf $WORKDIR/output
+cd $WORKDIR
 sh $WORKDIR/aports/scripts/mkimage.sh \
     --tag $ALPINE_VERSION-rpicustom \
     --outdir $WORKDIR/output \
