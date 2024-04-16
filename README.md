@@ -22,6 +22,11 @@ Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot
 
 ## Configurations
 
+ - `🚫` - Impossible - lacks hardware support.
+ - `🔥` - Tested, does not work.
+ - `👎` - Untested - likely not working.
+ - `❔` - Untested - possibly working.
+ - `✅` - Works
 
 ### Image architecture
 | Model                  | aarch64 | armv7 | armhf | Notes |
@@ -42,21 +47,16 @@ When using rpiboot, with a Pi 4, its better to build the boot folder into a boot
 | Pi 5         |   ❔    |   ❔                   |   ❔                   |   ❔              | |
 | Pi 4/CM4/400 |   ✅    |   ✅                   |   ✅                   |   ✅              | Tested on a Pi 4 (v1.2) 4GB. Tested with onboard ethernet and a USB ethernet adapter. Can be configured either by DHCP or EEPROM option |
 | Pi CM4S      |   ❔    |   ❔                   |   ❔                   |   👎              | |
-| Pi 3B, 3B+   |   ✅    |   ✅                   |   🚫                   |   ✅              | Tested on a Pi 3B (v1.2).|
+| Pi 3B, 3B+   |   ✅    |   ✅                   |   🚫                   |   ✅              | Tested on a Pi 3B (v1.2). Onboard ethernet only, USB eth not working. |
 | Pi 3A        |   ✅    |   🚫                   |   ❔                   |   👎              | |
 | Pi Zero 2    |   ✅    |   🚫                   |   ✅                   |   🔥              | USB ethernet not working. |
 | Pi 2B        |   ❔    |   ❔                   |   ❔                   |   ❔              | |
-| Pi Zero      |   ✅    |   🚫                   |   ❔                   |   👎              | |
+| Pi Zero      |   ✅    |   🚫                   |   ❔                   |   🔥              | USB ethernet not working. My Pi Zero wont go into rpiboot mode. Further investigation required. |
 | Pi 1B        |   ✅    |   🚫                   |   🚫                   |   ❔              | |
 | Pi 1A, CM1   |   ✅    |   🚫                   |   ❔                   |   👎              | |
 
 
-### Key
- - `🚫` - Impossible - lacks hardware support.
- - `🔥` - Tested, does not work.
- - `👎` - Untested - likely not working.
- - `❔` - Untested - possibly working.
- - `✅` - Works
+
 
 
 # Troubleshooting
