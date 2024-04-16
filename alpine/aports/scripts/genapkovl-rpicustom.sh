@@ -56,7 +56,7 @@ makefile root:root 0644 "$tmp"/etc/motd <<EOF
 Congratulations, it works!
 
 This image was built with Raspberry Pi Alpine Image Builder. 
-Edit `alpine/aports/scripts/genapkovl-rpicustom.sh` to customise the image.
+Edit 'alpine/aports/scripts/genapkovl-rpicustom.sh' to customise the image.
 EOF
 
 
