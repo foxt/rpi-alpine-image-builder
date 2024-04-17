@@ -18,7 +18,7 @@ Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot
 
 - Neither netboot or rpiboot can only deliver the Linux kernel and initramfs, for the APKs, modloop & apkovl, these must be delivered via HTTP or FTP.
   - This also means that both netboot and rpiboot require the Raspberry Pi to be connected via an Ethernet connection, thus, meaning this cannot be performed on the Zero or the Pi 3A.
-  - It may be possible to include `wpa_supplicant` into the initramfs to allow rpiboot to work on the Zero over Wifi, USB ethernet for the 1A/3A and CM1/3/3+/4S. More investigation is needed.
+  - ~~It may be possible to include `wpa_supplicant` into the initramfs to allow rpiboot to work on the Zero over Wifi~~ (it doesn't seem there's a clean way to do this), USB ethernet for the 1A/3A and CM1/3/3+/4S. More investigation is needed.
 - Netboot requires a SFTP server to deliver the files.
 - On Pi 4 and 5, the SFTP server IP address can be [configured in the EEPROM](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#TFTP_IP). On the Pi3, this must be handed out by the DHCP server.
 - A script is provided for network booting via a direct ethernet cable to the Pi by starting a dnsmasq DHCP server on the workstation.
