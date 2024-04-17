@@ -12,13 +12,13 @@ As Alpine must be built on Alpine, an ephemeral Docker container is used to run 
 
 Booting from the network or via [rpiboot](https://github.com/raspberrypi/usbboot) is possible, however is a little bit more involved, as:
 
-    - Neither netboot or rpiboot can only deliver the Linux kernel and initramfs, for the APKs, modloop & apkovl, these must be delivered via HTTP or FTP.
-      - This also means that both netboot and rpiboot require the Raspberry Pi to be connected via an Ethernet connection, thus, meaning this cannot be performed on the Zero or the Pi 3A.
-      - It may be possible to include `wpa_supplicant` into the initramfs to allow rpiboot to work on the Zero over Wifi, USB ethernet for the 1A/3A and CM1/3/3+/4S. More investigation is needed.
-    - Netboot requires a SFTP server to deliver the files.
-    - On Pi 4 and 5, the SFTP server IP address can be [configured in the EEPROM](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#TFTP_IP). On the Pi3, this must be handed out by the DHCP server.
-    - A script is provided for macOS users to allow network booting using the built in tftp server.
-    - A script is also included for macOS users to use rpiboot. This must be installed separately. TODO: convert the `boot.img` generation script to a Linux script for use in the Docker container.
+- Neither netboot or rpiboot can only deliver the Linux kernel and initramfs, for the APKs, modloop & apkovl, these must be delivered via HTTP or FTP.
+  - This also means that both netboot and rpiboot require the Raspberry Pi to be connected via an Ethernet connection, thus, meaning this cannot be performed on the Zero or the Pi 3A.
+  - It may be possible to include `wpa_supplicant` into the initramfs to allow rpiboot to work on the Zero over Wifi, USB ethernet for the 1A/3A and CM1/3/3+/4S. More investigation is needed.
+- Netboot requires a SFTP server to deliver the files.
+- On Pi 4 and 5, the SFTP server IP address can be [configured in the EEPROM](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#TFTP_IP). On the Pi3, this must be handed out by the DHCP server.
+- A script is provided for network booting via a direct ethernet cable to the Pi by starting a dnsmasq DHCP server on the workstation.
+- A script is also included for macOS users to use rpiboot. This must be installed separately. TODO: convert the `boot.img` generation script to a Linux script for use in the Docker container.
 
 ## Configurations
 
