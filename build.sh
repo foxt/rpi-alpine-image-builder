@@ -17,13 +17,16 @@ export BUILD_ARCH=aarch64
 #  - $WORKDIR/output (w) - The output directory for the image.
 export APPDIR=$(dirname "$0")
 export WORKDIR=$APPDIR/workdir
+export CACHEDIR=$WORKDIR/cache/apk
 
 
 mkdir -p $WORKDIR
+mkdir -p $CACHEDIR
 
 docker run --rm \
     -v $APPDIR:/app \
     -v $WORKDIR:/workdir \
+    -v $CACHEDIR:/etc/apk/cache \
     -e ALPINE_VERSION \
     -e BUILD_ARCH \
     -w /app \
