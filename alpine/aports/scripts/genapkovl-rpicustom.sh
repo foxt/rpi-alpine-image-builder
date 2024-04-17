@@ -67,7 +67,6 @@ rc_add mdev sysinit
 rc_add hwdrivers sysinit
 rc_add modloop sysinit
 
-rc_add hwclock boot
 rc_add modules boot
 rc_add sysctl boot
 rc_add hostname boot
@@ -79,4 +78,4 @@ rc_add killprocs shutdown
 rc_add savecache shutdown
 
 # Create tarball
-tar -c -C "$tmp" etc | gzip -9n > $HOSTNAME.apkovl.tar.gz
+tar -c -C "$tmp" . | gzip -9n > $HOSTNAME.apkovl.tar.gz
