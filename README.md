@@ -6,6 +6,10 @@ This is a rudimentary script to build a custom Alpine Linux image for the Raspbe
   - Built in a 'clean-room' fashion - booting an Alpine image and immediately running `lbu commit` shows that changes are made to the system during the boot process, and can be based on unique configuration (for example, /etc/resolv.conf is filled in with the DNS server & hostname from DHCP).
   - Netboot and or rpiboot for ease of development.
    
+The image is pretty small. A mostly unmodified image, built on Alpine 3.19 for Raspberry Pi 4B produces a 84.3MB (unpacked) boot image, which can be further shrunk to 66.4MB by removing unused packages, DTBs, etc. 
+
+On the memory constrained Raspberry Pi Zero 2W, it leaves about 300M out of the total 430M available for activities.
+
 
 ## Process
 As Alpine must be built on Alpine, an ephemeral Docker container is used to run the build scripts. The scripts clones the [aports](https://gitlab.alpinelinux.org/alpine/aports) repo and uses custom `mkimg` and `genapkovl` profiles to generate a `tar.gz` folder which can be extracted to the root of a FAT32 SD card and inserted into the Pi.
@@ -62,6 +66,8 @@ When using rpiboot, with a Pi 4, its better to build the boot folder into a boot
 # Troubleshooting
 
 ## Booting
+
+Generally, make sure you copied the entire boot folder to a FAT32 MBR formatted disk, *not* named the same of any as the directories on it (i.e. `boot`), you properly ejected the disk, and your Pi has a good enough power supply.
 
 ### Rainbow or black screen
 This means the Pi could not load the kernel. Ensure you're using the right architecture for the Pi model you're running. This may also occur when using rpiboot with a raw folder. Package the folder into a FAT32 `boot.img` instead.
